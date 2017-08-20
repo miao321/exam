@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+	
+<beans>
+	<bean id="txProxyTemplate" abstract="true" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<!-- 此段配置是使用事务代理，在单独使用Hibernate的时候，程序开发者需要自己写明事务处理方法
+				有了此段配置之后程序开发者不再需要对每个访问数据库的方法写事务管理 -->
+				
+				<!-- 下面的add*,del*只要业务类使用了以add、del为前缀的方法，程序将会自己进行事务管理 -->
+				
+				<prop key="add*">PROPAGATION_REQUIRED</prop>
+				<prop key="del*">PROPAGATION_REQUIRED</prop>
+				<prop key="update">PROPAGATION_REQUIRED</prop>
+				<prop key="find*">PROPAGATION_REQUIRED</prop>
+				<prop key="load*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!--  this is permit -->
+	
+	<bean id="examModuleService" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="permit.service.impl.ExamModuleServiceImpl">
+				<!-- 此配置文件也属于spring的配置文件，依然使用了spring的依赖注入  name表示在ExamModuleServiceImpl
+				类中有一个名为dao的属性，读者还需要记住一点，不是随便注入什么对象都可以，需要是类型一致。例如：examModuleDao表示exam-dao.xml
+				配置文件中ExamModuleDaoImpl类的对象，那么dao也应该是ExamModuleDaoImpl类对象或者其父类或者父类接口 -->
+				<property name="dao">
+					<ref bean="examModuleDao" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="examRoleService" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="permit.service.impl.ExamRoleServiceImpl">
+				<property name="dao">
+					<ref bean="examRoleDao" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="examResourceService" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="permit.service.impl.ExamResourceServiceImpl">
+				<property name="dao">
+					<ref bean="examResourceDao" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="examManagerService" parent="txProxyTemplate">
+		<property name="target">
+			<bean class="permit.service.impl.ExamManagerServiceImpl">
+				<property name="dao">
+					<ref bean="examManagerDao" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+</beans>

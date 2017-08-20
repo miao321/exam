@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Struts配置文件的文件头，包含DTD等信息 -->
+<!DOCTYPE struts-config PUBLIC
+		"-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+		"http://struts.apache.org/dtds/struts-config_1_2.dtd">
+		
+<struts-config>
+	<data-sources/>
+	<form-beans>
+		<form-bean name="examModule" type="permit.actionform.ExamModuleForm" />
+		<form-bean name="examManager" type="permit.actionform.ExamManagerForm" />
+		<form-bean name="examResource" type="permit.actionform.ExamResourceForm" />
+		<form-bean name="examRole" type="permit.actionform.ExamRoleForm" />
+	</form-beans>
+	
+	<global-exceptions>
+	<!-- 此处定义全局异常 -->
+	</global-exceptions>
+	<global-forwards>
+	<!-- 此处定义的全局转发，相当于全局变量，在项目的任何地方都可以使用 -->
+	</global-forwards>
+	
+	<action-mappings>
+		<!-- 此处定义Action映射 -->
+		<!-- 下面path代码请求路径 如/exam/findAllExamModule.do,type表示此请求是对应哪个类
+		但是在struts+spring+hibernate中不一样，这里表示用代理类，由spring来代理，parameter表示类的方法 -->
+		<action path="/exam/findAllExamModule" type="org.springframework.web.struts.DelegatingActionProxy"
+		parameter="findAllExamModule">
+		<!-- forward标签是定义转发路径的name 是转发的别名，path表示转发路径 -->
+		<forward name="find" path="/examJsp/permit/examModule/examModule.jsp" />
+		</action>
+	</action-mappings>
+	<!-- 此处标签的作用是加载其他自定义的配置文件 -->
+	<plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
+		<set-property property="contextConfigLocation" value="/WEB-INF/exam*.xml" />
+	</plug-in>
+</struts-config>
+
+
+

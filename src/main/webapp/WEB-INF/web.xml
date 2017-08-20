@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- <web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" id="WebApp_ID"> -->
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee                       http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	
+
+  <display-name>exam</display-name>
+  
+  <!-- 下面是Struts中ActionServlet的配置，实际上就是一个Servlet -->
+  <servlet>
+  	<servlet-name>action</servlet-name>
+  	<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+  	
+  	<!-- 下面上Servlet的参数，如果读者对Servlet熟悉的话就知道，在配置文件中可以给Servlet指定初始化参数，然后再Servlet中获得 -->
+  	
+  	<init-param>
+  		<!-- config是参数名称 -->
+  		<param-name>config</param-name>
+  		
+  		<!-- 下面的是config参数的内容，这里就相当于定义了一个字符串变量，上面是名称下面是内容 -->
+  		<param-value>/WEB-INF/struts-config.xml</param-value>
+  	</init-param>
+  	
+  	<!-- 下面是debug调试的级别，级别越高信息就越详细（参数越大代表级别越高） -->
+  	<init-param>
+  		<param-name>debug</param-name>
+  		<param-value>3</param-value>
+  	</init-param>
+  	
+  	<init-param>
+  		<param-name>detail</param-name>
+  		<param-value>3</param-value>
+  	</init-param>
+	
+	<!-- 下面是ActionServlet加载优先级设置 -->
+	<load-on-startup>1</load-on-startup>  	
+  </servlet>
+  
+  <servlet-mapping>
+  	<!-- 此处的servlet-name代表Servlet的名称，需要和上面 -->
+  	<servlet-name>action</servlet-name>
+  	
+  	<!-- *.do表示访问Servlet的格式 *表示任意字符  你可以写abc、123，那么*.do就必须是任意字符后面跟着.do(例如abc.do,123.do).
+  	下面读者也可以根据自己的需要来改，可以写成*.j2ee,*.abc,*.php,*.java等等，但是后面再struts-config配置文件中后缀名也要一致 -->
+  	<url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  
+  <!-- 下面是添加过滤器，此处过滤器的作用是用来过滤字符编码的，以前在用JSP开发的时候，如果从一个JSP传值到另外一个JSP，
+  不设置编码，接收到的数据将会是乱码，需要加上request.setCharacterEncoding("utf-8"),那么过滤器的作用就相当于
+  在每个JSP都用了request.setCharacterEncoding("utf-8")，这样就非常方便了 -->
+  <filter>
+  	<filter-name>EncodingFilter</filter-name>
+  	<filter-class>web.common.EncodingFilter</filter-class>
+  	<init-param>
+  		<param-name>encoding</param-name>
+  		<param-value>utf-8</param-value>
+  	</init-param>
+  </filter>
+  <filter-mapping>
+  	<filter-name>EncodingFilter</filter-name>
+  	<!-- 下面的/*意思是过滤所有的请求，因为数据传输都是根据请求传输的，所以只要过滤请求数据即可 -->
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <welcome-file-list>
+  	<welcome-file>index.html</welcome-file>
+  	<welcome-file>index.htm</welcome-file>
+  	<welcome-file>index.jsp</welcome-file>
+  	<welcome-file>default.html</welcome-file>
+  	<welcome-file>default.htm</welcome-file>
+  	<welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  
+  <!-- 下面是struts标签库引用 -->
+  <jsp-config>
+  	<taglib>
+  		<taglib-uri>/WEB-INF/struts-bean.tld</taglib-uri>
+  		<taglib-location>/WEB-INF/struts-bean.tld</taglib-location>
+  	</taglib>
+  	<taglib>
+  		<taglib-uri>/WEB-INF/struts-html.tld</taglib-uri>
+  		<taglib-location>/WEB-INF/struts-html.tld</taglib-location>
+  	</taglib>
+  	<taglib>
+  		<taglib-uri>/WEB-INF/struts-logic.tld</taglib-uri>
+  		<taglib-location>/WEB-INF/struts-logic.tld</taglib-location>
+  	</taglib>
+  </jsp-config>
+  
+  <!-- welcome-file-list此标签是作用是访问项目时如果没有指定路径或者文件，默认会调用index.jsp例如此项目的访问路径是http://localhost:8080/exam/login.jsp
+  如果输入http://localhost:8080/exam效果一样 -->
+  
+  
+  
+  
+  
+  
+ <!-- <welcome-file-list>
+ 	<welcome-file>login.jsp</welcome-file>
+ </welcome-file-list> -->
+ <!--  <servlet>
+  	<servlet-name>EncodingFilter</servlet-name>
+  	<display-name>EncodingFilter</display-name>
+  	<description></description>
+  	<servlet-class>web.common.EncodingFilter</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>EncodingFilter</servlet-name>
+  	<url-pattern>/EncodingFilter</url-pattern>
+  </servlet-mapping> -->
+</web-app>

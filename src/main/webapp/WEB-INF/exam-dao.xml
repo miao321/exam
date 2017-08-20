@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD/BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<!-- 下面是配置数据库连接信息 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataResource">
+		<property name="driverClassName">
+			<!-- 此处表示数据库连接驱动 -->
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<!-- 此处表述数据库的连接路径 -->
+			<value>jdbc:mysql://localhost:3306/exam?useUnicode=true&amp;characterEncoding=utf-8</value>
+		</property>
+		<property name="username">
+			<!-- 此处表示数据库链接名为root -->
+			<value>root</value>
+		</property>
+		<property name="password">
+			<!-- 此处表述数据库连接密码123456 -->
+			<value>123456</value>
+		</property>
+	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataResource" />
+		</property>
+		<property name="mappingResources">
+			<list>
+				<!-- 如果读者对Hibernate了解的话知道此处是加载Hibernate与数据库映射的配置文件 -->
+				<value>permit/xml/ExamManager.hbm.xml</value>
+				<value>permit/xml/ExamModule.hbm.xml</value>
+				<value>permit/xml/ExamResource.hbm.xml</value>
+				<value>permit/xml/ExamRole.hbm.xml</value>
+			</list>
+		</property>
+		
+		<property name="hibernateProperties">
+			<props>
+				<!-- 此处是配置Hibernate连接池的详细信息 -->
+				<!-- 下面是配置数据库方言为MYSQL语言 -->
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<!-- 下面是设置打印SQL语句，每当执行一条SQL语句，在控制台都会输出 -->
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.jdbc.fetch_size">30</prop>
+				<prop key="hibernate.jdbc.batch_size">5</prop>
+				<prop key="hibernate.c3p0.max_size">20</prop>
+				<prop key="hibernate.c3p0.min_size">5</prop>
+				<prop key="hibernate.c3p0.timeout">200</prop>
+				<prop key="hibernate.c3p0.max_statements">100</prop>
+				<prop key="hibernate.c3p0.acquire_increment">5</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+	
+	<!-- this is permit -->
+	<!-- id表示别名，用来代表ExamModuleDaoImpl类 class表示类路径 -->
+	<bean id="examModuleDao" class="permit.dao.impl.ExamModuleDaoImpl">
+		<!-- name="sessionFactory"表示ExamModuleDaoImpl类中有一个名为sessionFactory的属性
+		读者如果看到ExamModuleDaoImpl类的代码可能会感觉到疑惑，因为ExamModuleDaoImpl类继承了HibernateDaoSupport类
+		，sessionFactory这个名字是ExamModuleDaoImpl父类中的 -->
+		<property name="sessionFactory">
+			<!-- local="sessionFactory"是引用当前环境配置文件中的别名，sessionFactory是代表
+			的org.springframework.orm.hibernate3.LocalSessionFactoryBean类，
+			读者往上看是否有这么一个别名 -->
+			<ref local="sessionFactory" />
+		</property>
+		
+		<!-- 此段内容就是spring的依赖注入 -->
+	</bean>
+	
+	<bean id="examRoleDao" class="permit.dao.impl.ExamRoleDaoImpl">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="examResourceDao" class="permit.dao.impl.ExamResourceDaoImpl">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+	
+	<bean id="examManagerDao" class="permit.dao.impl.ExamManagerDaoImpl">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+</beans>

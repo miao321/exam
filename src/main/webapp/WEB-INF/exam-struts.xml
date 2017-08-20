@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 此配置文件是struts-config与exam-service.xml联系的桥梁 -->
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+	
+<beans>
+	<!-- 此配置文件读者特别需要注意，name="/exam/findAllExamModule"与"struts-config"中
+	path="/exam/findAllExamModule"需要一致，因为请求首先到struts-config中找到/exam/findAllModule，
+	然后再找到此配置文件的/exam/findAllExamModule,然后获得类实例 -->
+	
+	<!-- this is ExamModuleAction -->
+	<bean name="/exam/findAllExamModule" class="permit.action.ExamModuleAction" singleton="false">
+		<!-- 下面是使用的依赖注入，就不再多讲了 -->
+		<property name="examModuleService">
+			<ref bean="examModuleService" />
+		</property>
+	</bean>
+</beans>
